@@ -1,0 +1,7 @@
+favorites:
+  - Bird Flight
+  - Afternoon Classical
+directories:
+  feeds: ./feeds
+commands:
+  streamripper: /usr/bin/streamripper
