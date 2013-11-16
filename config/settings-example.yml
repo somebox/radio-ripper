@@ -1,7 +1,21 @@
 favorites:
   - Bird Flight
   - Afternoon Classical
-directories:
-  feeds: ./feeds
-commands:
+  - Hobo's Lullaby
+  - The Early Music Show
+  - The Moonshine Show
+  - The Tennessee Border Show
+  - Honky Tonkin'
+  - Night Train
+  - Bach Hour
+wkcr:
+  stream: 'http://kanga.college.columbia.edu:8000/listen.pls'
+  schedule: http://www.studentaffairs.columbia.edu/wkcr/node/3/view
+settings:
+  cache_dir: ./tmp/cache
+  mp3_dir: ./tmp/mp3
+  feed_dir: ./tmp/feeds
   streamripper: /usr/bin/streamripper
+  pre_roll: 60 # seconds
+  post_roll: 120 # seconds
+  cache_ttl: 3600*24
