@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+source $HOME/.rvm/environments/ruby-2.0.0-p247@radio-ripper
+cd $HOME/src/radio-ripper
+bundle exec rake wkcr:rip
