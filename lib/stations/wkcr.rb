@@ -138,8 +138,8 @@ module WKCR
       # m h dom mon wday
       t = self.time.localtime - CONFIG[:settings][:pre_roll].to_i.seconds
       crontab = "#{t.min} #{t.hour} * * #{t.wday}"
-      rake = "#{ENV['MY_RUBY_HOME']}/bin/rake wkcr:rip # #{self.name}, #{self.showtime}, #{self.duration/60}m"
-      %Q(#{crontab} cd "#{Dir.pwd}" && #{rake})
+      comment = "# #{self.name}, #{self.showtime}, #{self.duration/60}m"
+      %Q(#{crontab} cd "#{Dir.pwd}" && bin/record #{comment})
     end
   end
 end
