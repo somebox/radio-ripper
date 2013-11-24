@@ -53,9 +53,9 @@ class Podcaster
     feed_dir = CONFIG[:settings][:feed_dir]
 
     content = RSS::Maker.make('2.0') do |m|
-      m.channel.title = "title"
-      m.channel.description = "description"
-      m.channel.link = "link"
+      m.channel.title = "WKCR Podcasts"
+      m.channel.description = "Various programs recorded (unofficially) from WKCR"
+      m.channel.link = "www.wkcr.org"
       m.channel.language = "en"
       m.channel.about = "WKCR"
       m.items.do_sort = true # sort items by date
@@ -92,7 +92,7 @@ class Podcaster
         end
       end
     end
-    
+
     # write the feed RSS
     File.open("#{feed_dir}/podcast.rss", 'w') do |file|
       file.write(content.to_s)
