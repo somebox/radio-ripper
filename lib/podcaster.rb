@@ -79,10 +79,11 @@ class Podcaster
             link = URI::escape(file)
           end
           item.link = link
-          item.date = Time.now
+          item.pubDate = Time.now
+          item.category = 'audio'
           item.enclosure.url = link
           item.enclosure.length = File.stat(file).size
-          item.enclosure.type = "mp3"
+          item.enclosure.type = "audio/mpeg"
         end
       end
     end
