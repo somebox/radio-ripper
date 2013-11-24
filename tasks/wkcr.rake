@@ -16,9 +16,14 @@ namespace :wkcr do
 
   desc "rip current show"
   task :rip do
+    # record show stream
     show = WKCR::Show.current
     FileUtils.mkdir_p(show.mp3_path)
     system(show.stream_command)
+
+    # afterwards, merge/copy/cleanup and update podcast RSS
+    Podcaster.manage
+    Podcaster.generate_feeds
   end
 
   desc "create podcast feed and tend to files"
