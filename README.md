@@ -20,6 +20,8 @@ The final podcast file and MP3 folder structure can be made available on a web s
 
 I suggest you put this on a private server somewhere, but you might want to run it on a local machine. The requirements are simply: a persistent internet connection, and a locally-accessible folder that is served by a web server.
 
+**Note: right now, recording only works on a linux host with cron. Scheduling on OSX is still to be worked out.**
+
 ### Requirements
 
   * rvm
