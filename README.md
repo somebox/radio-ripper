@@ -2,17 +2,17 @@
 
 ## Rips Audio Streams for Brute-Force Podcasting Pleasure
 
-There's an FM [radio station in NYC](http://www.studentaffairs.columbia.edu/wkcr/) that I love. They broadcast their lovely programs live on the internet, but for legal reasons, cannot offer podcast feeds. That forced me to write this solution, which:
+There's an FM [radio station in NYC](http://www.studentaffairs.columbia.edu/wkcr/) that I love. They broadcast their lovely programs live on the internet, but for legal reasons, cannot offer podcast feeds. 
 
-* scrapes the [schedules](http://www.studentaffairs.columbia.edu/wkcr/schedule) of all programs and parses them,
+This solution does the following:
+
+* scrapes the [schedules](http://www.studentaffairs.columbia.edu/wkcr/schedule) of all programs and parses them.
+* outputs the necessary `crontab` entries to record your favorite shows at the right times.
 * uses [streamripper](http://streamripper.sourceforge.net/tutorialconsole.php) to capture live streams as individual mp3 files, and [mp3wrap](http://mp3wrap.sourceforge.net) to join multiple mp3s together.
-* creates a private podcast RSS feed of your favorite program(s)
 * manages the files
-* outputs the necessary `crontab` entries to record your favorites at the right times
+* creates a private podcast RSS feed of your favorite program(s)
 
-The web scraper process employs a local disk cache, as to not be greedy. The default cache expiration is 1 day.
-
-Dates are kept in the `America/New York` timezone, and converted to local time for the scheduling of recordings.
+The final podcast file and MP3 folder structure can be made available on a web server, and added to iTunes (or any other podcasting app) for your private listening pleasure.
 
 ![](http://somebox.com/docs/radio-ripper-itunes.jpg)
 
@@ -82,6 +82,14 @@ To start an interactive console session:
   
     $ rake console
 
+## Notes
+
+The web scraper process employs a local disk cache, as to not be greedy. The default cache expiration is 1 day.
+
+Dates are kept in the `America/New York` timezone, and converted to local time for the scheduling of recordings.
+
+Pull requests are welcome. Open an issue with any ideas you may have.
+
 ## TODO
 
 * Automatically install dependencies
@@ -89,8 +97,21 @@ To start an interactive console session:
 * Support scheduling on OSX via launchd
 * Create RSS feeds and subscription page
 * Fix issue with dates: currently they show 1 week in the future. My guess is there's a date parse/set bug.
+* Support other stations (considering WNYU or WBAI for some other favorites), and maybe a generic way to add favorites by time/url.
 * Tests. This was written in a fury of hacking, with disregard for proper TDD. Tisk.
 
 ## Support WKCR
 
 WKCR is a legendary FM broadcaster at Columbia University. Please consider [donating](https://giving.columbia.edu/giveonline/?schoolstyle=411) to this important station, one of the few remaining in the USA that plays incredible jazz and classical, and employs real DJs who know what they are talking about. Really, the programming is outstanding. They are completely listener-supported.
+
+## Disclaimer
+
+All contents are open-source, unlicensed, and unsupported. Enjoy, share, and realize that I offer no warranty or claim to anything you see here.
+
+Also **be aware, that you should not use this to create a public feed of WKCR programs**. If they wanted this to happen, they would offer it themselves. This program is intended to be used for private recording and entertainment purposes. The momement you publish recordings, you are most probably breaking the law. 
+
+## And Finally...
+
+When I was a kid I recorded the radio on cassette tapes. Later on, I used [RadioShift, from Rouge Amoeba](http://rogueamoeba.com/radioshift/) to record my favorite internet streams. That program never quite reached a good point of polish, and was discontinued in 2011. Eventually I realized this could be done without too much effort using a few tools and Ruby. 
+
+Overall, this app took about 8 hours of time to get working well. Not bad for the result: I can listen to my favorite WKCR programs on the train or at home. And despite the time difference and changing broadcast schedules, I can be reasonably sure the recordings are correct. Bliss!
