@@ -47,6 +47,9 @@ class Podcaster
   end
 
   def self.generate_feeds
+    base = CONFIG[:settings][:base_url]
+    feed_dir = CONFIG[:settings][:feed_dir]
+
     content = RSS::Maker.make('1.0') do |m|
       m.channel.title = "title"
       m.channel.description = "description"
@@ -62,7 +65,7 @@ class Podcaster
       #   m.image.title = @title
       # end
 
-      Dir.glob("#{CONFIG[:settings][:feed_dir]}/*").each do |show_dir|
+      Dir.glob("#{feed_dir}/*").each do |show_dir|
         show_name = File.basename(show_dir)
         Dir.glob("#{show_dir}/*.mp3").sort{|a,b| File.mtime(a) <=> File.mtime(b)}.each do |file|
           mp3 = File.basename(file)
@@ -70,7 +73,6 @@ class Podcaster
           item = m.items.new_item
           item.title = "#{show_name} #{showtime}"
           ## add a base url 
-          base = CONFIG[:settings][:base_url]
           if base != ''
             link = base + '/' + URI::escape("#{show_name}/#{mp3}")
           else 
@@ -85,7 +87,9 @@ class Podcaster
       end
     end
 
-    content
+    File.open("#{feed_dir}/podcast.rss", 'w') do |file|
+      file.write(content.to_s)
+    end
   end
 
   # combine several MP3s that were split due to disconnects

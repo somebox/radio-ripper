@@ -23,8 +23,8 @@ namespace :wkcr do
 
   desc "create podcast feed and tend to files"
   task :podcast do
-    # Podcaster.manage
-    puts Podcaster.generate_feeds.to_s
+    Podcaster.manage
+    Podcaster.generate_feeds
   end
 
   desc "currently playing show (or about to start)"
