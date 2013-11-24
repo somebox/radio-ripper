@@ -1,6 +1,8 @@
 require 'rss/0.9'
 require 'rss/maker'
 
+DEBUG=ENV['DEBUG']
+
 class Podcaster
   def self.manage
     shows = {}
@@ -18,16 +20,16 @@ class Podcaster
       end
     end
     shows.keys.each do |show_name|
-      puts show_name
+      puts show_name if DEBUG
       feed_dir = File.join(CONFIG[:settings][:feed_dir], show_name)
       shows[show_name].keys.each do |showtime|
-        puts " @ #{showtime}"
+        puts " @ #{showtime}" if DEBUG
         dest = "#{feed_dir}/#{showtime}.mp3"
         if File.exists?(dest)
-          puts " * exists"
+          puts " * exists" if DEBUG
         else
           shows[show_name][showtime].each do |mp3|
-            puts "   - #{File.basename(mp3)} | #{File.stat(mp3).mtime.to_s(:db)} | #{File.stat(mp3).size/1.kilobyte}k"
+            puts "   - #{File.basename(mp3)} | #{File.stat(mp3).mtime.to_s(:db)} | #{File.stat(mp3).size/1.kilobyte}k" if DEBUG
           end
           
           FileUtils.mkdir_p(feed_dir)
@@ -90,7 +92,8 @@ class Podcaster
         end
       end
     end
-    puts content.to_s
+    
+    # write the feed RSS
     File.open("#{feed_dir}/podcast.rss", 'w') do |file|
       file.write(content.to_s)
     end
@@ -102,7 +105,7 @@ class Podcaster
     quoted_files = files.map{|f| %Q("#{f}")}.join(' ')
     mp3wrap = CONFIG[:settings][:mp3wrap]
     command = %Q{#{mp3wrap} "#{dest}" #{quoted_files}}
-    puts command
+    puts command if DEBUG
     system(command)
     # rename it, because mp3wrap annoyingly adds '_MP3WRAP' to the end
     FileUtils.mv(dest.gsub(/\.mp3$/,'_MP3WRAP.mp3'), dest)
