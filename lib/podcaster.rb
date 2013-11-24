@@ -69,18 +69,19 @@ class Podcaster
         show_name = File.basename(show_dir)
         Dir.glob("#{show_dir}/*.mp3").sort{|a,b| File.mtime(a) <=> File.mtime(b)}.each do |file|
           mp3 = File.basename(file)
-          showtime = mp3.scan(/#{show_name}--(\w{3}[\d\-:]+[AP]M)/).first
+          showtime = mp3.scan(/\w{3}[\d\-:]+[AP]M/).first
+          wday, date, time = showtime.scan(/(^\w{3})-([\d-]+)-([\d:]+[AP]M)$/).first
+
           item = m.items.new_item
-          item.title = "#{show_name} #{showtime}"
+          item.title = "#{show_name.titleize} - #{wday}, #{date} #{time}"
           ## add a base url 
           if base != ''
             link = base + '/' + URI::escape("#{show_name}/#{mp3}")
           else 
             link = URI::escape(file)
           end
-          item.link = link
-          item.pubDate = Time.now
-          # item.category = 'audio'
+          item.link = link          
+          item.pubDate = Time.parse("#{date} #{time}")
           item.guid.content = link
           item.guid.isPermaLink = true
           item.enclosure.url = link
@@ -89,7 +90,7 @@ class Podcaster
         end
       end
     end
-
+    puts content.to_s
     File.open("#{feed_dir}/podcast.rss", 'w') do |file|
       file.write(content.to_s)
     end
