@@ -61,6 +61,8 @@ class Podcaster
       m.items.do_sort = true # sort items by date
       m.channel.updated = Time.now.to_s
       m.channel.author = 'WKCR'
+      m.image.title = 'WKCR'
+      m.image.url = "http://daniel-levin.com/assets/images/records/wkcr.gif"
 
       # if @image != nil
       #   m.image.url = @image
