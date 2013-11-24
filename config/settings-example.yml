@@ -15,7 +15,9 @@ settings:
   cache_dir: ./tmp/cache
   mp3_dir: ./tmp/mp3
   feed_dir: ./tmp/feeds
+  base_url: "http://myhost.com/podcasts/wkcr"
   streamripper: /usr/bin/streamripper
+  mp3wrap: /usr/bin/mp3wrap
   pre_roll: 60 # seconds
   post_roll: 120 # seconds
-  cache_ttl: 3600*24
+  cache_ttl: 86400 # seconds

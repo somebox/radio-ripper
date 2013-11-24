@@ -11,6 +11,7 @@ CONFIG =  HashWithIndifferentAccess.new(
 
 # app
 require 'stations/wkcr'
+require 'podcaster'
 
 # configure/init
 # ...

@@ -26,11 +26,17 @@ The dates are kept in the `America/New York` timezone, and converted to local ti
     $ cd radio-ripper
     $ bundle
 
-### Install Streamripper
+### Install Dependencies
+
+This solution uses **streamripper** to record mp3 radio feeds, and **mp3wrap** to combine several mp3s into one (which happens due to disconnects/reconnects).
 
 (On Debian)
 
-    $ aptitude install streamripper
+    $ aptitude install streamripper mp3wrap
+
+(on OSX using homebrew)
+
+    $ brew install streamripper mp3wrap
 
 ### Customize
 
@@ -38,13 +44,15 @@ Create a config file and edit it:
 
     $ cp config/settings-example.yml config/settings.yml
 
-Set up the directories for storing mp3 files and feeds. Be sure to also set the correct path to streamripper.
+Set up the directories for storing mp3 files and feeds. Be sure to also set the correct path to streamripper and mp3wrap.
 
 ### Set Up Scheduled Recordings
 
 The cron task outputs the necessary commands for recording shows. Copy and paste the result into a crontab file in `/etc/cron.d`.
 
     $ rake wkcr:cron
+
+NOTE: I have not yet figured out a good way to schedule recording on OSX. Mavericks (10.9) and the new energy saver features make scheduling exact times even harder. Looking for ideas...
 
 ## TODO
 
