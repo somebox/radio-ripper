@@ -50,7 +50,7 @@ class Podcaster
     base = CONFIG[:settings][:base_url]
     feed_dir = CONFIG[:settings][:feed_dir]
 
-    content = RSS::Maker.make('1.0') do |m|
+    content = RSS::Maker.make('2.0') do |m|
       m.channel.title = "title"
       m.channel.description = "description"
       m.channel.link = "link"
@@ -80,7 +80,9 @@ class Podcaster
           end
           item.link = link
           item.pubDate = Time.now
-          item.category = 'audio'
+          # item.category = 'audio'
+          item.guid.content = link
+          item.guid.isPermaLink = true
           item.enclosure.url = link
           item.enclosure.length = File.stat(file).size
           item.enclosure.type = "audio/mpeg"
