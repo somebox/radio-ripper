@@ -1,8 +1,8 @@
 # WKCR radio-ripper
 
-## Rips Audio Streams for Brute-Force Podcasting Pleasure
+## Rips Audio MP3 Streams for Brute-Force Podcasting Pleasure
 
-There's an FM [radio station in NYC](http://www.studentaffairs.columbia.edu/wkcr/) that I love. They broadcast their lovely programs live on the internet, but for legal reasons, cannot offer podcast feeds. 
+There's this FM [radio station in NYC](http://www.studentaffairs.columbia.edu/wkcr/) that I love. They broadcast their lovely programs live on the internet, but for legal reasons, cannot offer podcast feeds. So I created this.
 
 This solution does the following:
 
@@ -108,7 +108,7 @@ WKCR is a legendary FM broadcaster at Columbia University. Please consider [dona
 
 All contents are open-source, unlicensed, and unsupported. Enjoy, share, and realize that I offer no warranty or claim to anything you see here.
 
-Also **be aware, that you should not use this to create a public feed of WKCR programs**. If they wanted this to happen, they would offer it themselves. This program is intended to be used for private recording and entertainment purposes. The momement you publish recordings, you are most probably breaking the law. 
+Also **be aware, that you should not use this to create a public feed of WKCR programs**. If they wanted this to happen, they would offer it themselves. This program is intended to be used for private recording and entertainment purposes. The moment you publish recordings, you are most probably breaking the law! 
 
 ## And Finally...
 
