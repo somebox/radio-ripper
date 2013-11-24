@@ -108,10 +108,10 @@ WKCR is a legendary FM broadcaster at Columbia University. Please consider [dona
 
 All contents are open-source, unlicensed, and unsupported. Enjoy, share, and realize that I offer no warranty or claim to anything you see here.
 
-Also **be aware, that you should not use this to create a public feed of WKCR programs**. If they wanted this to happen, they would offer it themselves. This program is intended to be used for private recording and entertainment purposes. The moment you publish recordings, you are most probably breaking the law! 
+Also **be aware, that you should not use this to create a public feed of WKCR programs**. If they wanted this to happen, they would offer it themselves. This program is intended to be used for private recording and entertainment purposes. The moment you publish your recordings or feed, you are most probably breaking the law! 
 
 ## And Finally...
 
 When I was a kid I recorded the radio on cassette tapes. Later on, I used [RadioShift, from Rouge Amoeba](http://rogueamoeba.com/radioshift/) to record my favorite internet streams. That program never quite reached a good point of polish, and was discontinued in 2011. Eventually I realized this could be done without too much effort using a few tools and Ruby. 
 
-Overall, this app took about 8 hours of time to get working well. Not bad for the result: I can listen to my favorite WKCR programs on the train or at home. And despite the time difference and changing broadcast schedules, I can be reasonably sure the recordings are correct. Bliss!
+Overall, this app took about 8 hours of time to complete. Not bad for the result: I can listen to my favorite WKCR programs on the train or at home. And despite the time difference and changing broadcast schedules, I can be reasonably sure the recordings are correct. Bliss!
