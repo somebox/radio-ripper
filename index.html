@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Radio-ripper by somebox</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Radio-ripper</h1>
+          <h2>A set of ruby tasks to record live streams and create a personalized podcast feed from WKCR radio</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/somebox/radio-ripper/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/somebox/radio-ripper/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/somebox/radio-ripper" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h1>
+<a name="wkcr-radio-ripper" class="anchor" href="#wkcr-radio-ripper"><span class="octicon octicon-link"></span></a>WKCR radio-ripper</h1>
+
+<h2>
+<a name="rips-audio-mp3-streams-for-brute-force-podcasting-pleasure" class="anchor" href="#rips-audio-mp3-streams-for-brute-force-podcasting-pleasure"><span class="octicon octicon-link"></span></a>Rips Audio MP3 Streams for Brute-Force Podcasting Pleasure</h2>
+
+<p>There's this FM <a href="http://www.studentaffairs.columbia.edu/wkcr/">radio station in NYC</a> that I love. They broadcast their lovely programs live on the internet, but for legal reasons, cannot offer podcast feeds. So I created this.</p>
+
+<p>This solution does the following:</p>
+
+<ul>
+<li>scrapes the <a href="http://www.studentaffairs.columbia.edu/wkcr/schedule">schedules</a> of all programs and parses them.</li>
+<li>outputs the necessary <code>crontab</code> entries to record your favorite shows at the right times.</li>
+<li>uses <a href="http://streamripper.sourceforge.net/tutorialconsole.php">streamripper</a> to capture live streams as individual mp3 files, and <a href="http://mp3wrap.sourceforge.net">mp3wrap</a> to join multiple mp3s together.</li>
+<li>manages the files</li>
+<li>creates a private podcast RSS feed of your favorite program(s)</li>
+</ul><p>The final podcast file and MP3 folder structure can be made available on a web server, and added to iTunes (or any other podcasting app) for your private listening pleasure.</p>
+
+<p><img src="http://somebox.com/docs/radio-ripper-itunes.jpg" alt=""></p>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>I suggest you put this on a private server somewhere, but you might want to run it on a local machine. The requirements are simply: a persistent internet connection, and a locally-accessible folder that is served by a web server.</p>
+
+<p><strong>Note: right now, recording only works on a linux host with cron. Scheduling on OSX is still to be worked out.</strong></p>
+
+<h3>
+<a name="requirements" class="anchor" href="#requirements"><span class="octicon octicon-link"></span></a>Requirements</h3>
+
+<ul>
+<li>rvm</li>
+<li>ruby 2.0</li>
+</ul><h3>
+<a name="install-dependencies" class="anchor" href="#install-dependencies"><span class="octicon octicon-link"></span></a>Install Dependencies</h3>
+
+<p>This solution uses <strong><a href="http://streamripper.sourceforge.net/tutorialconsole.php">streamripper</a></strong> to record mp3 radio feeds, and <strong><a href="http://mp3wrap.sourceforge.net">mp3wrap</a></strong> to combine several mp3s into one (which happens due to disconnects/reconnects).</p>
+
+<p>(On Debian)</p>
+
+<pre><code>$ aptitude install streamripper mp3wrap
+</code></pre>
+
+<p>(on OSX using homebrew)</p>
+
+<pre><code>$ brew install streamripper mp3wrap
+</code></pre>
+
+<h3>
+<a name="prepare" class="anchor" href="#prepare"><span class="octicon octicon-link"></span></a>Prepare</h3>
+
+<p>Clone a local copy of this repository via git. Then:</p>
+
+<pre><code>$ cd radio-ripper
+$ bundle
+</code></pre>
+
+<h3>
+<a name="customize" class="anchor" href="#customize"><span class="octicon octicon-link"></span></a>Customize</h3>
+
+<p>Create a config file and edit it:</p>
+
+<pre><code>$ cp config/settings-example.yml config/settings.yml
+</code></pre>
+
+<p>Edit the config file. Set up the directories for storing mp3 files and feeds. The setting <code>feed_dir</code> should be a folder served by a web server. </p>
+
+<p>Be sure to also set the correct paths to streamripper and <a href="http://mp3wrap.sourceforge.net">mp3wrap</a>.</p>
+
+<p>You can specify your favorite programs in the <strong>favorites</strong> section of the config file. </p>
+
+<p>To Get a list of available programs:</p>
+
+<pre><code>$ rake wkcr:shows
+</code></pre>
+
+<h3>
+<a name="set-up-scheduled-recordings" class="anchor" href="#set-up-scheduled-recordings"><span class="octicon octicon-link"></span></a>Set Up Scheduled Recordings</h3>
+
+<p>The cron task outputs the necessary commands for recording shows. Copy and paste the result into a crontab file.</p>
+
+<pre><code>$ rake wkcr:cron
+</code></pre>
+
+<p>NOTE: I have not yet figured out a good way to schedule recording on OSX. Mavericks (10.9) and the new energy saver features make scheduling exact times even harder. Looking for ideas...</p>
+
+<h2>
+<a name="other-utilities" class="anchor" href="#other-utilities"><span class="octicon octicon-link"></span></a>Other Utilities</h2>
+
+<p>On OSX, there is a shortcut to tune into WKCR using VLC:</p>
+
+<pre><code>$ rake wkcr:listen
+</code></pre>
+
+<p>To display the currently broadcast show:</p>
+
+<pre><code>$ rake wkcr:current
+</code></pre>
+
+<p>To start an interactive console session:</p>
+
+<pre><code>$ rake console
+</code></pre>
+
+<h2>
+<a name="notes" class="anchor" href="#notes"><span class="octicon octicon-link"></span></a>Notes</h2>
+
+<p>The web scraper process employs a local disk cache, as to not be greedy. The default cache expiration is 1 day.</p>
+
+<p>Dates are kept in the <code>America/New York</code> timezone, and converted to local time for the scheduling of recordings.</p>
+
+<p>Pull requests are welcome. Open an issue with any ideas you may have.</p>
+
+<h2>
+<a name="todo" class="anchor" href="#todo"><span class="octicon octicon-link"></span></a>TODO</h2>
+
+<ul>
+<li>Automatically install dependencies</li>
+<li>Automatically create/update cron jobs</li>
+<li>Support scheduling on OSX via launchd</li>
+<li>Create RSS feeds and subscription page</li>
+<li>Fix issue with dates: currently they show 1 week in the future. My guess is there's a date parse/set bug.</li>
+<li>Support other stations (considering WNYU or WBAI for some other favorites), and maybe a generic way to add favorites by time/url.</li>
+<li>Tests. This was written in a fury of hacking, with disregard for proper TDD. Tisk.</li>
+</ul><h2>
+<a name="support-wkcr" class="anchor" href="#support-wkcr"><span class="octicon octicon-link"></span></a>Support WKCR</h2>
+
+<p>WKCR is a legendary FM broadcaster at Columbia University. Please consider <a href="https://giving.columbia.edu/giveonline/?schoolstyle=411">donating</a> to this important station, one of the few remaining in the USA that plays incredible jazz and classical, and employs real DJs who know what they are talking about. Really, the programming is outstanding. They are completely listener-supported.</p>
+
+<h2>
+<a name="disclaimer" class="anchor" href="#disclaimer"><span class="octicon octicon-link"></span></a>Disclaimer</h2>
+
+<p>All contents are open-source, unlicensed, and unsupported. Enjoy, share, and realize that I offer no warranty or claim to anything you see here.</p>
+
+<p>Also <strong>be aware, that you should not use this to create a public feed of WKCR programs</strong>. If they wanted this to happen, they would offer it themselves. This program is intended to be used for private recording and entertainment purposes. The moment you publish your recordings or feed, you are most probably breaking the law! </p>
+
+<h2>
+<a name="and-finally" class="anchor" href="#and-finally"><span class="octicon octicon-link"></span></a>And Finally...</h2>
+
+<p>When I was a kid I recorded the radio on cassette tapes. Later on, I used <a href="http://rogueamoeba.com/radioshift/">RadioShift, from Rouge Amoeba</a> to record my favorite internet streams. That program never quite reached a good point of polish, and was discontinued in 2011. Eventually I realized this could be done without too much effort using a few tools and Ruby. </p>
+
+<p>Overall, this app took about 8 hours of time to complete. Not bad for the result: I can listen to my favorite WKCR programs on the train or at home. And despite the time difference and changing broadcast schedules, I can be reasonably sure the recordings are correct. Bliss!</p>
+        </section>
+
+        <footer>
+          Radio-ripper is maintained by <a href="https://github.com/somebox">somebox</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
+    </div>
+  </body>
+</html>
