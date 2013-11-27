@@ -29,7 +29,7 @@ module WKCR
           seen_am = true if showtime.hour <= 12
           next if !seen_am && showtime.hour > 12
           {
-            :time  => showtime,
+            :time  => showtime - 1.week,
             :name  => row.css('.views-field-title').text.strip,
             :genre => row.css('.views-field-field-station-program-genre-value').text.strip
           }

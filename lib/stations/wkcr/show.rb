@@ -51,7 +51,7 @@ module WKCR
     end
 
     def showtime
-      self.time.strftime('%a %I:%M%p')
+      self.time.strftime('%a, %b %d %I:%M%p')
     end
 
     def dirname
