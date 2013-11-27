@@ -4,6 +4,13 @@ require 'rss/maker'
 DEBUG=ENV['DEBUG']
 
 class Podcaster
+  # Manages mp3 recordings:
+  # * traverses the mp3 download dir
+  # * examines each show directory for mp3s
+  # * sorts the mp3s by show date
+  # * combines multiple mp3s into one (due to disconnects)
+  # * copies the recording to the feed directory
+  # * finally, removes the source files from the mp3 download dir
   def self.manage
     shows = {}
     Dir.glob("#{CONFIG[:settings][:mp3_dir]}/*").each do |show_dir|
@@ -48,6 +55,7 @@ class Podcaster
     end
   end
 
+  # Generates podcast RSS feed of available shows
   def self.generate_feeds
     base = CONFIG[:settings][:base_url]
     feed_dir = CONFIG[:settings][:feed_dir]
@@ -85,7 +93,7 @@ class Podcaster
             link = URI::escape(file)
           end
           item.link = link          
-          item.pubDate = Time.parse("#{date} #{time}")
+          item.pubDate = File.mtime(file)
           item.guid.content = link
           item.guid.isPermaLink = true
           item.enclosure.url = link
