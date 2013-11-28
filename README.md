@@ -70,7 +70,7 @@ Also verify the correct paths to streamripper and mp3wrap.
 
 ### Favorites
 
-You will want to edit the favorites in the `config/settings.yml` file:
+You will want to edit the favorites in the `config/settings.yml` file, and add the titles of the shows you want to record:
 
     favorites:
       - Hobo's Lullaby
@@ -97,11 +97,11 @@ To get a list of available programs:
 The cron task outputs the necessary commands for recording shows. Copy and paste the result into a crontab file.
 
     $ rake wkcr:cron
-    59 21 * * 6 cd "/home/foz/src/radio-ripper" && bin/record # Hobo's Lullaby, Sat, Nov 23 04:00PM, 120m
+    59 21 * * 6 cd "/Users/foz/src/radio-ripper" && bin/record # Hobo's Lullaby, every Sat at 04:00PM for 120m
 
-    29 15 * * 5 cd "/home/foz/src/radio-ripper" && bin/record # The Early Music Show, Fri, Nov 22 09:30AM, 150m
+    29 15 * * 5 cd "/Users/foz/src/radio-ripper" && bin/record # The Early Music Show, every Fri at 09:30AM for 150m
 
-    59 15 * * 0 cd "/home/foz/src/radio-ripper" && bin/record # The Moonshine Show, Sun, Nov 24 10:00AM, 120m
+    59 15 * * 0 cd "/Users/foz/src/radio-ripper" && bin/record # The Moonshine Show, every Sun at 10:00AM for 120m
 
 NOTE: I have not yet figured out a good way to schedule recording on OSX. Mavericks (10.9) and the new energy saver features make scheduling exact times even harder. Looking for ideas...
 
