@@ -1,13 +1,13 @@
 # WKCR radio-ripper
 
-## Rips Audio MP3 Streams for Brute-Force Podcasting Pleasure
+## Rips Radio Streams for Brute-Force Podcasting Pleasure
 
 There's this FM [radio station in NYC](http://www.studentaffairs.columbia.edu/wkcr/) that I love. They broadcast their lovely programs live on the internet, but for legal reasons, cannot offer podcast feeds. So I created this.
 
 This solution does the following:
 
 * scrapes the [schedules](http://www.studentaffairs.columbia.edu/wkcr/schedule) of all programs and parses them.
-* outputs the necessary `crontab` entries to record your favorite shows at the right times.
+* outputs the necessary `crontab` entries to record your favorite shows at the right times (in your timezone).
 * uses [streamripper](http://streamripper.sourceforge.net/tutorialconsole.php) to capture live streams as individual mp3 files, and [mp3wrap](http://mp3wrap.sourceforge.net) to join multiple mp3s together.
 * manages the files
 * creates a private podcast RSS feed of your favorite program(s)
@@ -52,21 +52,56 @@ Create a config file and edit it:
 
     $ cp config/settings-example.yml config/settings.yml
 
-Edit the config file. Set up the directories for storing mp3 files and feeds. The setting `feed_dir` should be a folder served by a web server. 
+Edit the config file. Set up the directories for storing mp3 files and feeds. The setting `feed_dir` should be a folder served by a web server.
 
-Be sure to also set the correct paths to streamripper and [mp3wrap](http://mp3wrap.sourceforge.net).
+---
+    settings:
+      cache_dir: ./tmp/cache
+      mp3_dir: ./tmp/mp3  # streamripper output
+      feed_dir: /var/nginx/myhost.com/html/podcasts/wkcr # webserver dir
+      base_url: "http://myhost.com/podcasts/wkcr" # webserver dir public url (keep it private!)
+      streamripper: /usr/bin/streamripper
+      mp3wrap: /usr/bin/mp3wrap
+      pre_roll: 60 # seconds, start recordings early
+      post_roll: 120 # seconds, keep recording a bit after
+      cache_ttl: 86400 # seconds, used by schedule scraper
 
-You can specify your favorite programs in the **favorites** section of the config file. 
+Also verify the correct paths to streamripper and mp3wrap.
 
-To Get a list of available programs:
+### Favorites
+
+You will want to edit the favorites in the `config/settings.yml` file:
+
+    favorites:
+      - Hobo's Lullaby
+      - The Early Music Show
+      - The Moonshine Show
+
+To get a list of available programs:
 
     $ rake wkcr:shows
+    Jazz 'til Dawn (300m, Jazz)
+     🕑 Sun, Nov 24 01:00AM
+    Morning Ragas (120m, In All Languages)
+     🕑 Sun, Nov 24 08:00AM
+    The Moonshine Show (120m, American Music)
+     🕑 Sun, Nov 24 02:00PM
+    Raag Aur Taal (120m, In All Languages)
+     🕑 Sun, Nov 24 07:00PM
+    Transfigured Night (240m, New Music)
+     🕑 Tue, Nov 26 01:00AM, Thu, Nov 28 01:00AM, Sat, Nov 23 02:00AM    
+    ... etc ...
 
 ### Set Up Scheduled Recordings
 
 The cron task outputs the necessary commands for recording shows. Copy and paste the result into a crontab file.
 
     $ rake wkcr:cron
+    59 21 * * 6 cd "/home/foz/src/radio-ripper" && bin/record # Hobo's Lullaby, Sat, Nov 23 04:00PM, 120m
+
+    29 15 * * 5 cd "/home/foz/src/radio-ripper" && bin/record # The Early Music Show, Fri, Nov 22 09:30AM, 150m
+
+    59 15 * * 0 cd "/home/foz/src/radio-ripper" && bin/record # The Moonshine Show, Sun, Nov 24 10:00AM, 120m
 
 NOTE: I have not yet figured out a good way to schedule recording on OSX. Mavericks (10.9) and the new energy saver features make scheduling exact times even harder. Looking for ideas...
 
@@ -79,6 +114,7 @@ On OSX, there is a shortcut to tune into WKCR using VLC:
 To display the currently broadcast show:
 
     $ rake wkcr:current
+    Afternoon Classical       Thu, Nov 28 03:00PM 180m
 
 To start an interactive console session:
   
@@ -98,7 +134,6 @@ Pull requests are welcome. Open an issue with any ideas you may have.
 * Automatically create/update cron jobs
 * Support scheduling on OSX via launchd
 * Create RSS feeds and subscription page
-* Fix issue with dates: currently they show 1 week in the future. My guess is there's a date parse/set bug.
 * Support other stations (considering WNYU or WBAI for some other favorites), and maybe a generic way to add favorites by time/url.
 * Tests. This was written in a fury of hacking, with disregard for proper TDD. Tisk.
 

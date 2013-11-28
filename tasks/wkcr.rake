@@ -10,7 +10,12 @@ namespace :wkcr do
   desc "display the schedule of shows"
   task :shows do
     WKCR::Schedule.list.map do |s| 
-      printf("%-40s\n %s\n %-40s\n", "#{s.name} (#{s.duration/60}m)", s.showtimes.join(', '), s.generes.join(', '))
+      printf("%s (%s, %s)\n 🕑 %s\n", 
+        "#{s.name}", 
+        "#{s.duration/60}m",
+        s.generes[0..4].join(', '), 
+        s.showtimes.join(', ')
+      )
     end
   end
 
@@ -39,7 +44,6 @@ namespace :wkcr do
 
   desc "tune in and listen"
   task :listen do
-
     system("open '#{CONFIG[:wkcr][:stream]}' -a vlc")
   end
 end
