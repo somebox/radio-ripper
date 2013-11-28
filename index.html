@@ -35,7 +35,7 @@
 <a name="wkcr-radio-ripper" class="anchor" href="#wkcr-radio-ripper"><span class="octicon octicon-link"></span></a>WKCR radio-ripper</h1>
 
 <h2>
-<a name="rips-audio-mp3-streams-for-brute-force-podcasting-pleasure" class="anchor" href="#rips-audio-mp3-streams-for-brute-force-podcasting-pleasure"><span class="octicon octicon-link"></span></a>Rips Audio MP3 Streams for Brute-Force Podcasting Pleasure</h2>
+<a name="rips-radio-streams-for-brute-force-podcasting-pleasure" class="anchor" href="#rips-radio-streams-for-brute-force-podcasting-pleasure"><span class="octicon octicon-link"></span></a>Rips Radio Streams for Brute-Force Podcasting Pleasure</h2>
 
 <p>There's this FM <a href="http://www.studentaffairs.columbia.edu/wkcr/">radio station in NYC</a> that I love. They broadcast their lovely programs live on the internet, but for legal reasons, cannot offer podcast feeds. So I created this.</p>
 
@@ -43,7 +43,7 @@
 
 <ul>
 <li>scrapes the <a href="http://www.studentaffairs.columbia.edu/wkcr/schedule">schedules</a> of all programs and parses them.</li>
-<li>outputs the necessary <code>crontab</code> entries to record your favorite shows at the right times.</li>
+<li>outputs the necessary <code>crontab</code> entries to record your favorite shows at the right times (in your timezone).</li>
 <li>uses <a href="http://streamripper.sourceforge.net/tutorialconsole.php">streamripper</a> to capture live streams as individual mp3 files, and <a href="http://mp3wrap.sourceforge.net">mp3wrap</a> to join multiple mp3s together.</li>
 <li>manages the files</li>
 <li>creates a private podcast RSS feed of your favorite program(s)</li>
@@ -96,15 +96,47 @@ $ bundle
 <pre><code>$ cp config/settings-example.yml config/settings.yml
 </code></pre>
 
-<p>Edit the config file. Set up the directories for storing mp3 files and feeds. The setting <code>feed_dir</code> should be a folder served by a web server. </p>
+<p>Edit the config file. Set up the directories for storing mp3 files and feeds. The setting <code>feed_dir</code> should be a folder served by a web server.</p>
 
-<p>Be sure to also set the correct paths to streamripper and <a href="http://mp3wrap.sourceforge.net">mp3wrap</a>.</p>
+<hr><pre><code>settings:
+  cache_dir: ./tmp/cache
+  mp3_dir: ./tmp/mp3  # streamripper output
+  feed_dir: /var/nginx/myhost.com/html/podcasts/wkcr # webserver dir
+  base_url: "http://myhost.com/podcasts/wkcr" # webserver dir public url (keep it private!)
+  streamripper: /usr/bin/streamripper
+  mp3wrap: /usr/bin/mp3wrap
+  pre_roll: 60 # seconds, start recordings early
+  post_roll: 120 # seconds, keep recording a bit after
+  cache_ttl: 86400 # seconds, used by schedule scraper
+</code></pre>
 
-<p>You can specify your favorite programs in the <strong>favorites</strong> section of the config file. </p>
+<p>Also verify the correct paths to streamripper and mp3wrap.</p>
 
-<p>To Get a list of available programs:</p>
+<h3>
+<a name="favorites" class="anchor" href="#favorites"><span class="octicon octicon-link"></span></a>Favorites</h3>
+
+<p>You will want to edit the favorites in the <code>config/settings.yml</code> file, and add the titles of the shows you want to record:</p>
+
+<pre><code>favorites:
+  - Hobo's Lullaby
+  - The Early Music Show
+  - The Moonshine Show
+</code></pre>
+
+<p>To get a list of available programs:</p>
 
 <pre><code>$ rake wkcr:shows
+Jazz 'til Dawn (300m, Jazz)
+ 🕑 Sun, Nov 24 01:00AM
+Morning Ragas (120m, In All Languages)
+ 🕑 Sun, Nov 24 08:00AM
+The Moonshine Show (120m, American Music)
+ 🕑 Sun, Nov 24 02:00PM
+Raag Aur Taal (120m, In All Languages)
+ 🕑 Sun, Nov 24 07:00PM
+Transfigured Night (240m, New Music)
+ 🕑 Tue, Nov 26 01:00AM, Thu, Nov 28 01:00AM, Sat, Nov 23 02:00AM    
+... etc ...
 </code></pre>
 
 <h3>
@@ -113,6 +145,11 @@ $ bundle
 <p>The cron task outputs the necessary commands for recording shows. Copy and paste the result into a crontab file.</p>
 
 <pre><code>$ rake wkcr:cron
+59 21 * * 6 cd "/Users/foz/src/radio-ripper" &amp;&amp; bin/record # Hobo's Lullaby, every Sat at 04:00PM for 120m
+
+29 15 * * 5 cd "/Users/foz/src/radio-ripper" &amp;&amp; bin/record # The Early Music Show, every Fri at 09:30AM for 150m
+
+59 15 * * 0 cd "/Users/foz/src/radio-ripper" &amp;&amp; bin/record # The Moonshine Show, every Sun at 10:00AM for 120m
 </code></pre>
 
 <p>NOTE: I have not yet figured out a good way to schedule recording on OSX. Mavericks (10.9) and the new energy saver features make scheduling exact times even harder. Looking for ideas...</p>
@@ -128,6 +165,7 @@ $ bundle
 <p>To display the currently broadcast show:</p>
 
 <pre><code>$ rake wkcr:current
+Afternoon Classical       Thu, Nov 28 03:00PM 180m
 </code></pre>
 
 <p>To start an interactive console session:</p>
@@ -152,7 +190,6 @@ $ bundle
 <li>Automatically create/update cron jobs</li>
 <li>Support scheduling on OSX via launchd</li>
 <li>Create RSS feeds and subscription page</li>
-<li>Fix issue with dates: currently they show 1 week in the future. My guess is there's a date parse/set bug.</li>
 <li>Support other stations (considering WNYU or WBAI for some other favorites), and maybe a generic way to add favorites by time/url.</li>
 <li>Tests. This was written in a fury of hacking, with disregard for proper TDD. Tisk.</li>
 </ul><h2>
