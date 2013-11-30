@@ -85,7 +85,8 @@ module WKCR
       t = self.time.localtime - CONFIG[:settings][:pre_roll].to_i.seconds
       crontab = "#{t.min} #{t.hour} * * #{t.wday}"
       comment = "# #{self.name}, every #{self.time.strftime('%a at %I:%M%p')} for #{self.duration/60}m"
-      %Q(#{crontab} cd "#{Dir.pwd}" && bin/record #{comment})
+      log = ">> #{CONFIG[:settings][:logfile]} 2>&1"
+      %Q(#{crontab} cd "#{Dir.pwd}" && bin/record #{log} #{comment})
     end
   end
 end
