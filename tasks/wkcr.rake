@@ -22,9 +22,13 @@ namespace :wkcr do
   desc "rip current show"
   task :rip do
     # record show stream
+    start = Time.now
     show = WKCR::Show.current
+    puts "Ripping: #{show.summary}"
     FileUtils.mkdir_p(show.mp3_path)
+    puts show.stream_command
     system(show.stream_command)
+    puts "done after #{(Time.now - start)/3600}m"
 
     # afterwards, merge/copy/cleanup and update podcast RSS
     Podcaster.manage
