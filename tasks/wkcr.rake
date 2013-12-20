@@ -28,7 +28,7 @@ namespace :wkcr do
     FileUtils.mkdir_p(show.mp3_path)
     puts show.stream_command
     system(show.stream_command)
-    puts "done after #{(Time.now - start)/3600}m"
+    puts "done after #{((Time.now - t)/60).to_i}m"
 
     # afterwards, merge/copy/cleanup and update podcast RSS
     Podcaster.manage
