@@ -16,13 +16,13 @@ class Podcaster
     Dir.glob("#{CONFIG[:settings][:mp3_dir]}/*").each do |show_dir|
       show_name = File.basename(show_dir)
       shows[show_name] = {}
-      Dir.glob("#{show_dir}/*.mp3").sort{|a,b| File.mtime(a) <=> File.mtime(b)}.each do |file|
-        mp3 = File.basename(file)
-        showtime = mp3.scan(/#{show_name}--(\w{3}[\d\-:]+[AP]M)/).first
+      Dir.glob("#{show_dir}/*.{mp3,aac}").sort{|a,b| File.mtime(a) <=> File.mtime(b)}.each do |file_path|
+        filename = File.basename(file_path)
+        showtime = filename.scan(/#{show_name}--(\w{3}[\d\-:]+[AP]M)/).first
         if showtime
           showtime = showtime.first
           shows[show_name][showtime] ||= []
-          shows[show_name][showtime] << file
+          shows[show_name][showtime] << file_path
         end
       end
     end
@@ -31,17 +31,18 @@ class Podcaster
       feed_dir = File.join(CONFIG[:settings][:feed_dir], show_name)
       shows[show_name].keys.each do |showtime|
         puts " @ #{showtime}" if DEBUG
-        dest = "#{feed_dir}/#{showtime}.mp3"
+        files = shows[show_name][showtime]
+        kind = files.first.to_s.split('.').last
+        dest = "#{feed_dir}/#{showtime}.#{kind}"
         if File.exists?(dest)
           puts " * exists" if DEBUG
         else
-          shows[show_name][showtime].each do |mp3|
-            puts "   - #{File.basename(mp3)} | #{File.stat(mp3).mtime.to_s(:db)} | #{File.stat(mp3).size/1.kilobyte}k" if DEBUG
+          files.each do |file_path|
+            puts "   - #{File.basename(file_path)} | #{File.stat(file_path).mtime.to_s(:db)} | #{File.stat(file_path).size/1.kilobyte}k" if DEBUG
           end
           
           FileUtils.mkdir_p(feed_dir)
-          files = shows[show_name][showtime]
-          if files.count > 1
+          if kind == 'mp3' && files.count > 1
             join_mp3s(files, dest)
           else
             FileUtils.cp(files.first, dest)
@@ -79,26 +80,27 @@ class Podcaster
 
       Dir.glob("#{feed_dir}/*").each do |show_dir|
         show_name = File.basename(show_dir)
-        Dir.glob("#{show_dir}/*.mp3").sort{|a,b| File.mtime(a) <=> File.mtime(b)}.each do |file|
-          mp3 = File.basename(file)
-          showtime = mp3.scan(/\w{3}[\d\-:]+[AP]M/).first
+        Dir.glob("#{show_dir}/*.{mp3,aac}").sort{|a,b| File.mtime(a) <=> File.mtime(b)}.each do |file_path|
+          filename = File.basename(file_path)
+          kind = filename.split('.').last
+          showtime = filename.scan(/\w{3}[\d\-:]+[AP]M/).first
           wday, date, time = showtime.scan(/(^\w{3})-([\d-]+)-([\d:]+[AP]M)$/).first
 
           item = m.items.new_item
           item.title = "#{show_name.titleize} - #{wday}, #{date} #{time}"
           ## add a base url 
           if base != ''
-            link = base + '/' + URI::escape("#{show_name}/#{mp3}")
+            link = base + '/' + URI::escape("#{show_name}/#{filename}")
           else 
-            link = URI::escape(file)
+            link = URI::escape(file_path)
           end
           item.link = link          
-          item.pubDate = File.mtime(file)
+          item.pubDate = File.mtime(file_path)
           item.guid.content = link
           item.guid.isPermaLink = true
           item.enclosure.url = link
-          item.enclosure.length = File.stat(file).size
-          item.enclosure.type = "audio/mpeg"
+          item.enclosure.length = File.stat(file_path).size
+          item.enclosure.type = "audio/#{kind == 'mp3' ? 'mpeg' : kind}"
         end
       end
     end
