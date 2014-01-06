@@ -81,6 +81,7 @@ class Podcaster
       Dir.glob("#{feed_dir}/*").each do |show_dir|
         show_name = File.basename(show_dir)
         Dir.glob("#{show_dir}/*.{mp3,aac}").sort{|a,b| File.mtime(a) <=> File.mtime(b)}.each do |file_path|
+          next if File.mtime(file_path) < 10.days.ago
           filename = File.basename(file_path)
           kind = filename.split('.').last
           showtime = filename.scan(/\w{3}[\d\-:]+[AP]M/).first
