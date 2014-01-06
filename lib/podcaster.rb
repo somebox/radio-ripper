@@ -81,14 +81,18 @@ class Podcaster
       Dir.glob("#{feed_dir}/*").each do |show_dir|
         show_name = File.basename(show_dir)
         Dir.glob("#{show_dir}/*.{mp3,aac}").sort{|a,b| File.mtime(a) <=> File.mtime(b)}.each do |file_path|
-          next if File.mtime(file_path) < 10.days.ago
           filename = File.basename(file_path)
           kind = filename.split('.').last
           showtime = filename.scan(/\w{3}[\d\-:]+[AP]M/).first
+
           wday, date, time = showtime.scan(/(^\w{3})-([\d-]+)-([\d:]+[AP]M)$/).first
+
+          t = Chronic.parse("#{date} #{time}")
+          next if !t || t < 10.days.ago
 
           item = m.items.new_item
           item.title = "#{show_name.titleize} - #{wday}, #{date} #{time}"
+          p item.title if DEBUG
           ## add a base url 
           if base != ''
             link = base + '/' + URI::escape("#{show_name}/#{filename}")
