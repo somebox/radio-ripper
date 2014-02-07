@@ -88,7 +88,7 @@ class Podcaster
           wday, date, time = showtime.scan(/(^\w{3})-([\d-]+)-([\d:]+[AP]M)$/).first
 
           t = Chronic.parse("#{date} #{time}")
-          next if !t || t < 10.days.ago
+          next if !t || t < 15.days.ago
 
           item = m.items.new_item
           item.title = "#{show_name.titleize} - #{wday}, #{date} #{time}"
