@@ -9,7 +9,9 @@ module WKCR
         # puts "* cache hit for #{wday}"
         return cache.load(wday, :expires => CACHE_TTL)
       else
-        http = Curl.get("#{CONFIG[:wkcr][:schedule]}/#{wday}")
+        http = Curl.get("#{CONFIG[:wkcr][:schedule]}/#{wday}") do |http|
+          http.headers["User-Agent"] = USER_AGENT
+        end
         html = http.body_str
         cache.store(wday, html, :expires => CACHE_TTL)
         puts "* wrote cache for #{wday}"
@@ -26,10 +28,11 @@ module WKCR
         seen_am = false
         doc.css('.view-station-schedule-day tbody tr').map do |row|
           showtime = Chronic.parse(wday + ' ' + row.css('.views-field-start').text.strip)
+          showtime -= 1.week if (showtime - Time.now.in_time_zone('America/New_York')) > 1.week
           seen_am = true if showtime.hour <= 12
           next if !seen_am && showtime.hour > 12
           {
-            :time  => showtime - 1.week,
+            :time  => showtime,
             :name  => row.css('.views-field-title').text.strip,
             :genre => row.css('.views-field-field-station-program-genre-value').text.strip
           }
