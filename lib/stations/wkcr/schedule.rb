@@ -10,7 +10,7 @@ module WKCR
         return cache.load(wday, :expires => CACHE_TTL)
       else
         http = Curl.get("#{CONFIG[:wkcr][:schedule]}/#{wday}") do |http|
-          http.headers["User-Agent"] = USER_AGENT
+          http.headers["User-Agent"] = CONFIG[:settings][:user_agent]
         end
         html = http.body_str
         cache.store(wday, html, :expires => CACHE_TTL)
