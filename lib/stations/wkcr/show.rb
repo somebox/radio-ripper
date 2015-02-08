@@ -46,13 +46,42 @@ module WKCR
       end.first
     end
 
-    def summary
-      sprintf("%-25.24s %s %dm", self.name, self.showtime, self.duration/60)
-    end
+
+    # metadata
 
     def showtime
       self.time.strftime('%a, %b %d %I:%M%p')
     end
+
+    def summary
+      sprintf("%-25.24s %s %dm", self.name, self.showtime, self.duration/60)
+    end
+
+
+    # lockfile management
+
+    def recording?
+      return false unless File.exists?(self.lockfile)
+      line = File.readlines(self.lockfile).first.to_s.strip
+      line == self.showtime
+    end
+
+    def touch_lockfile
+      File.open(self.lockfile, 'w') do |file|
+        file.puts(self.showtime)
+      end
+    end
+
+    def lockfile
+      File.join(self.mp3_path, '.recording')
+    end
+
+    def remove_lockfile
+      File.delete(self.lockfile)
+    end
+
+
+    # paths and filename
 
     def dirname
       self.name.gsub(/\s+/,'_').gsub(/[\W]+/,'').dasherize
@@ -67,6 +96,9 @@ module WKCR
     def filename
       self.dirname.dasherize + '--' + self.time.strftime('%a-%Y-%m-%d-%I%M%p') + '.mp3'
     end
+
+
+    # recording
 
     # total time to record audio, with pre and post-roll, in seconds
     def record_duration

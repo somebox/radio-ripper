@@ -20,7 +20,7 @@ namespace :wkcr do
   desc "display the schedule of shows"
   task :schedule do
     WKCR::Schedule.list.map do |s| 
-      printf("%s (%s, %s)\n 🕑 %s\n", 
+      printf("%s (%s, %s)\n > %s\n", 
         "#{s.name}", 
         "#{s.duration/60}m",
         s.generes[0..4].join(', '), 
@@ -34,11 +34,17 @@ namespace :wkcr do
     # record show stream
     start = Time.now
     show = WKCR::Show.current
-    puts "Ripping: #{show.summary}"
+    if show.recording?
+      puts "aborting: already recording #{show.filename}"
+      exit 0
+    end
+    puts "#{start} Ripping: #{show.summary}"
     FileUtils.mkdir_p(show.mp3_path)
+    show.touch_lockfile
     puts show.stream_command
     system(show.stream_command)
     puts "done after #{((Time.now - start)/60).to_i}m"
+    show.remove_lockfile
 
     # afterwards, merge/copy/cleanup and update podcast RSS
     Podcaster.manage
