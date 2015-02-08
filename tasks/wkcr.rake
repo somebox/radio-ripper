@@ -1,3 +1,5 @@
+require 'pry'
+
 namespace :wkcr do
   desc "get station schedules and output cron lines"
   task :cron do
@@ -7,8 +9,16 @@ namespace :wkcr do
     end
   end
 
+  desc "display recording schedule"
+  task :recordings do
+    shows = WKCR::Show.favorites.map do |show|
+      show.record_settings
+    end
+    puts shows.to_yaml
+  end
+
   desc "display the schedule of shows"
-  task :shows do
+  task :schedule do
     WKCR::Schedule.list.map do |s| 
       printf("%s (%s, %s)\n 🕑 %s\n", 
         "#{s.name}", 

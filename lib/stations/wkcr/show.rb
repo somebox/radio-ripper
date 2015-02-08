@@ -88,5 +88,16 @@ module WKCR
       log = ">> #{CONFIG[:settings][:logfile]} 2>&1"
       %Q(#{crontab} cd "#{Dir.pwd}" && bin/record #{log} #{comment})
     end
+
+    def record_settings
+      t = self.time.localtime
+      {
+        self.name.to_param => {
+          'day' => t.strftime('%a'), 
+          'time' => t.strftime('%H:%M'), 
+          'duration' => self.duration/60
+        }
+      }
+    end
   end
 end

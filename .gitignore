@@ -4,3 +4,4 @@ tmp
 db/*.db
 log/*.log
 config/settings.yml
+.rake_tasks*

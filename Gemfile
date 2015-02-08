@@ -22,3 +22,5 @@ gem "moneta"  # cache
 gem "wirble"
 gem "awesome_print"
 gem "lunchy"   # util to help with scheduling jobs
+gem "byebug"
+gem "pry"
