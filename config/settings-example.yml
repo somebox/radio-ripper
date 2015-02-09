@@ -22,4 +22,5 @@ settings:
   post_roll: 120 # seconds, keep recording a bit after
   cache_ttl: 86400 # seconds, used by schedule scraper
   logfile: ./log/ripper.log
-  user_agent: "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36"
+  stream_user_agent: "VLC"
+  web_user_agent: "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36"

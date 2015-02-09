@@ -108,7 +108,7 @@ module WKCR
     # command-line to rip the stream for this show
     def stream_command
       dest = File.join(self.mp3_path, self.filename)
-      %Q(#{CONFIG[:settings][:streamripper]} "#{CONFIG[:wkcr][:stream]}" -d "#{self.mp3_path}" -A -s -a "#{self.filename}" -l #{self.record_duration} -u "#{CONFIG[:settings][:user_agent]}" --quiet)
+      %Q(#{CONFIG[:settings][:streamripper]} "#{CONFIG[:wkcr][:stream]}" -d "#{self.mp3_path}" -A -s -a "#{self.filename}" -l #{self.record_duration} -u "#{CONFIG[:settings][:stream_user_agent]}" --quiet)
     end
 
     # the full cron line with schedule
